@@ -42,6 +42,7 @@ export class EntityLabelListItem extends LabelListItem {
 }
 
 export class RelationLabelListItem extends LabelListItem {}
+export class TraitLabelListItem extends LabelListItem {}
 
 export class LabelList {
   private id2Label: { [key: number]: LabelListItem } = {};

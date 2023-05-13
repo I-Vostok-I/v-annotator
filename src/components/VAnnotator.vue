@@ -18,10 +18,18 @@
             )
           "
           :relationLabels="relationLabelList"
+          :traits="
+            traitList.filterByRange(
+              item.textLine.startOffset,
+              item.textLine.endOffset
+            )
+          "
+          :traitLabels="traitLabelList"
           :font="font"
           :rtl="rtl"
           :selected-entities="highlightedEntities"
           :selected-relation="selectedRelation"
+          :selected-trait="selectedTrait"
           :text="text"
           :textLine="item.textLine"
           :base-x="baseX"
@@ -30,11 +38,14 @@
           :key="`${index}:${rtl}`"
           @click:entity="clicked"
           @click:relation="onRelationClicked"
+          @click:trait="onTraitClicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
           @contextmenu:relation="$emit('contextmenu:relation', $event)"
+          @contextmenu:trait="$emit('contextmenu:trait', $event)"
           @update:height="updateHeight"
           @setSelectedEntity="selectedEntity = $event"
           @setSelectedRelation="selectedRelation = $event"
+          @setSelectedTrait="selectedTrait = $event"
         />
       </template>
     </RecycleScroller>
@@ -56,6 +67,7 @@ import {
   LabelList,
   EntityLabelListItem,
   RelationLabelListItem,
+  TraitLabelListItem,
 } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
@@ -65,6 +77,7 @@ import { TextLine } from "@/domain/models/Line/LineText";
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { TextSelector } from "@/domain/models/EventHandler/TextSelectionHandler";
 import { Relation, RelationList } from "@/domain/models/Label/Relation";
+import { Trait, TraitList } from "@/domain/models/Label/Trait";
 
 interface ViewLine {
   id: string;
@@ -99,6 +112,14 @@ export default Vue.extend({
       default: () => [],
     },
     relationLabels: {
+      type: Array as PropType<Label[]>,
+      default: () => [],
+    },
+    traits: {
+      type: Array as PropType<Trait[]>,
+      default: () => [],
+    },
+    traitLabels: {
       type: Array as PropType<Label[]>,
       default: () => [],
     },
@@ -137,6 +158,7 @@ export default Vue.extend({
       textElement: null as SVGTextElement | null,
       selectedRelation: null as Relation | null,
       selectedEntity: null as Entity | null,
+      selectedTrait: null as Trait | null,
     };
   },
 
@@ -195,6 +217,16 @@ export default Vue.extend({
         return null;
       }
     },
+    traitLabelList(): LabelList | null {
+      if (this.textElement) {
+        const widths = this.traitLabels.map((label) =>
+          widthOf(label.text, this.textElement!)
+        );
+        return LabelList.valueOf(this.traitLabels, widths, TraitLabelListItem);
+      } else {
+        return null;
+      }
+    },
     items(): ViewLine[] {
       if (!this.textLines) {
         return [];
@@ -221,6 +253,10 @@ export default Vue.extend({
     relationList(): RelationList {
       this.resetSelection();
       return new RelationList(this.relations, this.entityList);
+    },
+    traitList(): TraitList {
+      this.resetSelection();
+      return new TraitList(this.traits, this.entityList);
     },
     textLines(): TextLine[] {
       if (!this.font || !this.entityLabelList || this.maxWidth === -1) {
@@ -254,6 +290,10 @@ export default Vue.extend({
       this.$emit("click:relation", event, relation);
     },
 
+    onTraitClicked(event: Event, trait: Trait) {
+      this.$emit("click:trait", event, trait);
+    },
+
     setMaxWidth() {
       this.$nextTick(
         debounce(() => {
@@ -272,6 +312,7 @@ export default Vue.extend({
     resetSelection() {
       this.selectedRelation = null;
       this.selectedEntity = null;
+      this.selectedTrait = null;
     },
     open(event: Event): void {
       try {

@@ -85,6 +85,12 @@ export default Vue.extend({
     maxLevel: {
       type: Number,
     },
+    maxLevelTrait: {
+      type: Number,
+    },
+    traitsOnLine: {
+      type: Boolean,
+    },
     selected: {
       type: Boolean,
       default: false,
@@ -92,11 +98,29 @@ export default Vue.extend({
   },
 
   computed: {
+    adjustedFontSize(): number {
+      return this.fontSize + 3;
+    },
     r(): number {
       return 12;
     },
     y(): number {
-      return 20 + this.fontSize * this.maxLevel + this.fontSize / 2;
+      if (this.traitsOnLine) {
+        return (
+          20 +
+          this.adjustedFontSize * this.maxLevel +
+          this.adjustedFontSize * this.maxLevelTrait +
+          this.adjustedFontSize +
+          12
+        );
+      } else {
+        return (
+          20 +
+          this.adjustedFontSize * this.maxLevel +
+          this.adjustedFontSize / 2 +
+          this.adjustedFontSize
+        );
+      }
     },
     d(): string {
       if (this.openLeft && this.openRight) {
@@ -126,7 +150,12 @@ export default Vue.extend({
       }
     },
     dy(): number {
-      return 20 + this.fontSize * this.level;
+      return (
+        20 +
+        this.adjustedFontSize * this.level +
+        this.adjustedFontSize * this.maxLevelTrait +
+        this.adjustedFontSize
+      );
     },
     center(): number {
       return this._x1 + (this._x2 - this._x1) / 2;

@@ -32,6 +32,8 @@
         :label-width="relation.labelWidth"
         :marker="relation.marker"
         :max-level="maxRelationLevel"
+        :max-level-trait="maxTraitLevel"
+        :traits-on-line="lineTraits.length > 0"
         :openLeft="relation.openLeft"
         :openRight="relation.openRight"
         :rtl="rtl"
@@ -41,6 +43,25 @@
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
         @mouseover="$emit('setSelectedRelation', relation.relation)"
         @mouseleave="$emit('setSelectedRelation', null)"
+      />
+      <BaseTrait
+        v-for="trait in lineTraits"
+        :key="trait.trait.id"
+        :font-size="font.fontSize"
+        :offset="trait.offset"
+        :dark="dark"
+        :label="trait.label"
+        :label-width="trait.labelWidth"
+        :level="trait.level"
+        :margin="left"
+        :max-level="maxTraitLevel"
+        :max-level-relation="maxRelationLevel"
+        :relations-on-line="lineRelations.length > 0"
+        :selected="isSelectedTrait(trait.trait)"
+        @click:tarit="$emit('click:trait', $event, trait.trait)"
+        @contextmenu:trait="$emit('contextmenu:trait', trait.trait)"
+        @mouseover="$emit('setSelectedTrait', trait.trait)"
+        @mouseleave="$emit('setSelectedTrait', null)"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
@@ -75,14 +96,18 @@ import { LabelList } from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/LineText";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
+import BaseTrait from "./BaseTrait.vue";
 import BaseRelation from "./BaseRelation.vue";
 import { EntityLine, GeometricEntity } from "@/domain/models/Line/LineEntity";
 import { RelationLine, LineRelation } from "@/domain/models/Line/LineRelation";
+import { LineTrait, TraitLine } from "@/domain/models/Line/LineTrait";
+import { TraitListItem } from "@/domain/models/Label/Trait";
 
 export default Vue.extend({
   components: {
     BaseEntity,
     BaseText,
+    BaseTrait,
     BaseRelation,
   },
 
@@ -94,6 +119,10 @@ export default Vue.extend({
     },
     relations: {
       type: [] as PropType<RelationListItem[]>,
+      default: () => [],
+    },
+    traits: {
+      type: [] as PropType<TraitListItem[]>,
       default: () => [],
     },
     textLine: {
@@ -119,6 +148,9 @@ export default Vue.extend({
     relationLabels: {
       type: Object as PropType<LabelList>,
     },
+    traitLabels: {
+      type: Object as PropType<LabelList>,
+    },
     rtl: {
       type: Boolean,
       default: false,
@@ -140,6 +172,9 @@ export default Vue.extend({
     },
     selectedRelation: {
       type: Object as PropType<RelationListItem | null>,
+    },
+    selectedTrait: {
+      type: Object as PropType<TraitListItem | null>,
     },
   },
 
@@ -166,7 +201,7 @@ export default Vue.extend({
           const svg = document.getElementById(
             this.svgId
           ) as unknown as SVGSVGElement;
-          const height = svg.getBBox().height + 30;
+          const height = svg.getBBox().height + 20;
           svg.setAttribute("style", `height: ${height}px`);
           this.$emit("update:height", this.id, height);
         });
@@ -198,15 +233,45 @@ export default Vue.extend({
       );
       return view.render(this.geometricEntities, this.rtl);
     },
+    lineTraits(): LineTrait[] {
+      const view = new TraitLine(this.traits, this.traitLabels);
+      return view.render(this.geometricEntities);
+    },
     maxRelationLevel(): number {
       return Math.max(...this.lineRelations.map((r) => r.level), 0);
     },
+    maxTraitLevel(): number {
+      return Math.max(...this.lineTraits.map((t) => t.level), 0);
+    },
     y(): number {
-      const level = Math.max(...this.lineRelations.map((item) => item.level));
-      if (level < 0) {
-        return 0;
+      const levelRel = Math.max(
+        ...this.lineRelations.map((item) => item.level)
+      );
+      const levelTrait = Math.max(...this.lineTraits.map((item) => item.level));
+      if (levelRel >= 0 && levelTrait >= 0) {
+        return (
+          20 +
+          (this.font.fontSize + 3) * levelTrait +
+          (this.font.fontSize + 3) * levelRel +
+          (this.font.fontSize + 3) +
+          24
+        );
+      } else if (levelRel >= 0) {
+        return (
+          20 +
+          (this.font.fontSize + 3) * levelRel +
+          (this.font.fontSize + 3) / 2 +
+          32
+        );
+      } else if (levelTrait >= 0) {
+        return (
+          20 +
+          (this.font.fontSize + 3) * levelTrait +
+          (this.font.fontSize + 3) / 2 +
+          12
+        );
       } else {
-        return 20 + this.font.fontSize * (level + 1.5);
+        return 0;
       }
     },
     translateEntity(): string {
@@ -243,6 +308,9 @@ export default Vue.extend({
     },
     isSelectedRelation(relation: RelationListItem): boolean {
       return this.selectedRelation === relation;
+    },
+    isSelectedTrait(trait: TraitListItem): boolean {
+      return this.selectedTrait === trait;
     },
     isSelectedEntity(entity: Entity): boolean {
       if (this.selectedRelation) {

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="width: 500px; background-color: #eee">
+  <div id="app" style="width: 1000px; background-color: #eee">
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
     <button @click="changeLabel">Change label</button>
@@ -8,6 +8,7 @@
       Allow overlapping({{ allowOverlapping }})
     </button>
     <button @click="addRelation">Add relation</button>
+    <button @click="addTrait">Add trait</button>
     <v-annotator
       :allow-overlapping="allowOverlapping"
       :text="text"
@@ -16,13 +17,17 @@
       :grapheme-mode="graphemeMode"
       :relations="relations"
       :relation-labels="relationLabels"
+      :traits="traits"
+      :trait-labels="traitLabels"
       :rtl="rtl"
       :selected-entities="selectedEntities"
       @add:entity="addEntity"
       @click:entity="updateEntity"
       @click:relation="updateRelation"
+      @click:trait="updateTrait"
       @contextmenu:entity="deleteEntity"
       @contextmenu:relation="deleteRelation"
+      @contextmenu:trait="deleteTrait"
     />
   </div>
 </template>
@@ -32,6 +37,7 @@ import Vue from "vue";
 import VAnnotator from "./components/VAnnotator.vue";
 import { Entity } from "./domain/models/Label/Entity";
 import { Relation } from "./domain/models/Label/Relation";
+import { Trait } from "./domain/models/Label/Trait";
 
 export default Vue.extend({
   name: "App",
@@ -49,7 +55,7 @@ export default Vue.extend({
       // rtl: true,
       // text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾"
       rtl: false,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\nThe president Obama.".repeat(
+      text: "we must respect the will of the individual. Take it easy I can assure you that everything will turn out to be fine.\nThe president Obama.".repeat(
         1 //0000
       ),
       entities: [
@@ -117,23 +123,37 @@ export default Vue.extend({
           toId: 0,
           labelId: 0,
         },
+      ],
+      traits: [
+        {
+          id: 4,
+          type: 1,
+          entityId: 2,
+        },
+        {
+          id: 0,
+          type: 1,
+          entityId: 0,
+        },
+        {
+          id: 1,
+          type: 1,
+          entityId: 0,
+        },
         {
           id: 2,
-          fromId: 5,
-          toId: 4,
-          labelId: 0,
+          type: 1,
+          entityId: 5,
         },
         {
           id: 3,
-          fromId: 1,
-          toId: 6,
-          labelId: 1,
+          type: 1,
+          entityId: 2,
         },
         {
-          id: 4,
-          fromId: 1,
-          toId: 7,
-          labelId: 1,
+          id: 5,
+          type: 1,
+          entityId: 6,
         },
       ],
       entityLabels: [
@@ -158,6 +178,16 @@ export default Vue.extend({
           id: 1,
           text: "isLivedIn",
           color: "#ffffff",
+        },
+      ],
+      traitLabels: [
+        {
+          id: 0,
+          text: "negation",
+        },
+        {
+          id: 1,
+          text: "direction",
         },
       ],
     };
@@ -198,6 +228,11 @@ export default Vue.extend({
           this.deleteRelation(r);
         }
       });
+      this.traits.forEach((t) => {
+        if (t.entityId === entity.id) {
+          this.deleteTrait(t);
+        }
+      });
     },
     changeText() {
       this.text = "The president Obama came to Japan.";
@@ -219,12 +254,26 @@ export default Vue.extend({
         labelId: 1,
       });
     },
+    addTrait() {
+      this.traits.push({
+        id: 4,
+        type: 1,
+        entityId: 6,
+      });
+    },
     updateRelation(event: Event, relation: Relation) {
       console.log(relation);
       console.log(event);
     },
+    updateTrait(event: Event, trait: Trait) {
+      console.log(trait);
+      console.log(event);
+    },
     deleteRelation(relation: Relation) {
       this.relations = this.relations.filter((r) => r.id !== relation.id);
+    },
+    deleteTrait(trait: Trait) {
+      this.traits = this.traits.filter((t) => t.id !== trait.id);
     },
     resetRelation() {
       this.relations = [];
