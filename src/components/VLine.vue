@@ -58,7 +58,7 @@
         :max-level-relation="maxRelationLevel"
         :relations-on-line="lineRelations.length > 0"
         :selected="isSelectedTrait(trait.trait)"
-        @click:tarit="$emit('click:trait', $event, trait.trait)"
+        @click:trait="$emit('click:trait', $event, trait.trait)"
         @contextmenu:trait="$emit('contextmenu:trait', trait.trait)"
         @mouseover="$emit('setSelectedTrait', trait.trait)"
         @mouseleave="$emit('setSelectedTrait', null)"
