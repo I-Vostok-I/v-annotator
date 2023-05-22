@@ -7,7 +7,8 @@ export class Entity implements Identifiable {
     readonly id: number,
     readonly label: number,
     readonly startOffset: number,
-    readonly endOffset: number
+    readonly endOffset: number,
+    readonly state: string
   ) {
     if (startOffset > endOffset) {
       throw new RangeError(
@@ -78,7 +79,8 @@ export class Entities {
             text
               ? text.toCodePointOffset(entity.startOffset)!
               : entity.startOffset,
-            text ? text.toCodePointOffset(entity.endOffset)! : entity.endOffset
+            text ? text.toCodePointOffset(entity.endOffset)! : entity.endOffset,
+            entity.state
           )
       )
     );

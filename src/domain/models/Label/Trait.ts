@@ -6,13 +6,15 @@ export interface Trait {
   id: number;
   type: number;
   entityId: number;
+  state: string;
 }
 
 export class TraitListItem implements Identifiable {
   constructor(
     readonly id: number,
     readonly type: number,
-    readonly entity: Entity
+    readonly entity: Entity,
+    readonly state: string
   ) {}
 
   /**
@@ -71,7 +73,12 @@ export class TraitList {
   constructor(traits: Trait[], entities: Entities) {
     for (const trait of traits) {
       const newEntity = entities.findById(trait.entityId)!;
-      const item = new TraitListItem(trait.id, trait.type, newEntity);
+      const item = new TraitListItem(
+        trait.id,
+        trait.type,
+        newEntity,
+        trait.state
+      );
       this.tree.insert([item.startOffset, item.endOffset], item);
     }
   }

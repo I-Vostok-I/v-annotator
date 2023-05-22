@@ -7,7 +7,8 @@ export class GeometricEntity {
   constructor(
     readonly entity: Entity,
     readonly ranges: Ranges,
-    readonly level: number
+    readonly level: number,
+    readonly state: string
   ) {}
 
   get center(): number {
@@ -90,7 +91,8 @@ export class EntityLine {
       const intervals = ranges.getIntervals(startsWith, labelWidth);
       this.levelManager.update(entity, intervals);
       const level = this.levelManager.fetchLevel(entity)!;
-      geometricEntities.push(new GeometricEntity(entity, ranges, level));
+      const state = entity.state;
+      geometricEntities.push(new GeometricEntity(entity, ranges, level, state));
     }
     return geometricEntities;
   }

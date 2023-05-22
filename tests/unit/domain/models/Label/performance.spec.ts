@@ -44,7 +44,9 @@ describe("Subject", () => {
   it("filter by range", () => {
     const entityList: Entity[] = [];
     for (let i = 0; i < 1000; i++) {
-      entityList.push(new Entity(i + 5, 0, i * 10 + 100, i * 10 + 105));
+      entityList.push(
+        new Entity(i + 5, 0, i * 10 + 100, i * 10 + 105, "added")
+      );
     }
     const entities = Entities.valueOf(entityList);
     const t0 = performance.now();

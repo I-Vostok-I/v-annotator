@@ -4,11 +4,12 @@
     @click="$emit('click:entity', $event)"
     @contextmenu.prevent="$emit('contextmenu:entity')"
   >
-    <circle :r="r" :fill="color" :cx="cx" :cy="y" />
+    <circle :r="r" :fill="colorShape" :cx="cx" :cy="y" />
     <text
       :x="x"
       :y="y"
       fill="currentColor"
+      :color="color"
       :dx="dx"
       dy="0.35em"
       v-text="text"
@@ -38,6 +39,10 @@ export default Vue.extend({
       required: true,
     },
     color: {
+      type: String,
+      required: true,
+    },
+    colorShape: {
       type: String,
       required: true,
     },

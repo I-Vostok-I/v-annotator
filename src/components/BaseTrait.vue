@@ -13,14 +13,14 @@
       ry="3"
       :width="rectWidth"
       :height="rectHeight"
-      :stroke="stroke"
+      :stroke="stateColour"
       :stroke-width="width"
       :fill="fill"
     />
     <text
       :x="textX"
       :y="textY"
-      :fill="textCol"
+      :fill="stateColour"
       text-anchor="middle"
       v-text="label"
     />
@@ -29,7 +29,7 @@
       :d="`M${rectX + rectWidth / 4},${rectY + rectHeight} V${
         rectY + rectHeight + 16
       }`"
-      :stroke="stroke"
+      :stroke="stateColour"
       stroke-width="2"
       fill="none"
     />
@@ -38,7 +38,7 @@
       :d="`M${rectX + (rectWidth / 4) * 3},${rectY + rectHeight} V${
         rectY + rectHeight + 16
       }`"
-      :stroke="stroke"
+      :stroke="stateColour"
       stroke-width="2"
       fill="none"
     />
@@ -89,6 +89,10 @@ export default Vue.extend({
     selected: {
       type: Boolean,
       default: false,
+    },
+    state: {
+      type: String,
+      default: "added",
     },
   },
 
@@ -145,10 +149,19 @@ export default Vue.extend({
     fill(): string {
       return this.dark ? "#1E1E1E" : "white";
     },
-    stroke(): string {
+    textCol(): string {
       return this.dark ? "white" : "black";
     },
-    textCol(): string {
+    stateColour(): string {
+      if (this.state === "removed") {
+        return "#D50000";
+      }
+      if (this.state === "added") {
+        return "#00A651";
+      }
+      if (this.state === "modified") {
+        return "#E67E22";
+      }
       return this.dark ? "white" : "black";
     },
   },

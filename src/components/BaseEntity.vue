@@ -6,7 +6,7 @@
       :x1="x1"
       :x2="x2"
       :y="lineY"
-      :color="color"
+      :color="stateColourLine"
       :height="height"
     />
     <BaseEntityText
@@ -17,7 +17,8 @@
       :dx="dx"
       :rtl="rtl"
       :text="label"
-      :color="color"
+      :color="stateColourText"
+      :color-shape="stateColourLine"
       @click:entity="$emit('click:entity', $event)"
       @contextmenu:entity="$emit('contextmenu:entity')"
     />
@@ -74,6 +75,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    state: {
+      type: String,
+      default: "added",
+    },
   },
 
   computed: {
@@ -109,6 +114,24 @@ export default Vue.extend({
         this.x(range.x1),
         this.x(range.x2),
       ]);
+    },
+    stateColourLine(): string {
+      if (this.state === "removed") {
+        return "#888888";
+      }
+      return this.color;
+    },
+    stateColourText(): string {
+      if (this.state === "removed") {
+        return "#D50000";
+      }
+      if (this.state === "added") {
+        return "#00A651";
+      }
+      if (this.state === "modified") {
+        return "#E67E22";
+      }
+      return "currentColor";
     },
   },
 

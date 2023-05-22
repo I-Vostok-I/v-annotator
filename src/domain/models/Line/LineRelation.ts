@@ -14,6 +14,7 @@ export interface LineRelation {
   marker: string;
   openLeft: boolean;
   openRight: boolean;
+  state: string;
 }
 
 export class RelationLine {
@@ -46,6 +47,7 @@ export class RelationLine {
       const label = this.relationLabels.getById(relation.labelId);
       let openStart = relation.isOpenOnLeft(this.textLine.startOffset);
       let openEnd = relation.isOpenOnRight(this.textLine.endOffset);
+      const state = relation.state;
       if (openStart && openEnd) {
         x1 = this.left;
         x2 = this.right;
@@ -112,6 +114,7 @@ export class RelationLine {
         marker,
         openLeft: openStart,
         openRight: openEnd,
+        state: state,
       });
     }
     return lineRelations;

@@ -7,6 +7,7 @@ export interface Relation {
   labelId: number;
   fromId: number;
   toId: number;
+  state: string;
 }
 
 export class RelationListItem implements Identifiable {
@@ -14,7 +15,8 @@ export class RelationListItem implements Identifiable {
     readonly id: number,
     readonly labelId: number,
     readonly fromEntity: Entity,
-    readonly toEntity: Entity
+    readonly toEntity: Entity,
+    readonly state: string
   ) {}
 
   /**
@@ -123,7 +125,8 @@ export class RelationList {
         relation.id,
         relation.labelId,
         fromEntity,
-        toEntity
+        toEntity,
+        relation.state
       );
       this.tree.insert([item.startOffset, item.endOffset], item);
     }

@@ -65,6 +65,7 @@ export default Vue.extend({
           label: 0,
           startOffset: 3,
           endOffset: 7,
+          state: "auto",
         },
         {
           id: 4,
@@ -72,6 +73,7 @@ export default Vue.extend({
           label: 0,
           startOffset: 35,
           endOffset: 46,
+          state: "modified",
         },
         {
           id: 1,
@@ -79,6 +81,7 @@ export default Vue.extend({
           label: 1,
           startOffset: 59,
           endOffset: 62,
+          state: "added",
         },
         {
           id: 6,
@@ -86,6 +89,7 @@ export default Vue.extend({
           label: 1,
           startOffset: 63,
           endOffset: 69,
+          state: "added",
         },
         {
           id: 7,
@@ -93,6 +97,7 @@ export default Vue.extend({
           label: 1,
           startOffset: 70,
           endOffset: 73,
+          state: "auto",
         },
         {
           id: 2,
@@ -100,6 +105,7 @@ export default Vue.extend({
           label: 0,
           startOffset: 79,
           endOffset: 89,
+          state: "auto",
         },
         {
           id: 3,
@@ -107,6 +113,7 @@ export default Vue.extend({
           label: 1,
           startOffset: 79,
           endOffset: 94,
+          state: "auto",
         },
         {
           id: 5,
@@ -114,6 +121,7 @@ export default Vue.extend({
           label: 1,
           startOffset: 130,
           endOffset: 135,
+          state: "removed",
         },
       ],
       relations: [
@@ -122,6 +130,21 @@ export default Vue.extend({
           fromId: 4,
           toId: 0,
           labelId: 0,
+          state: "auto",
+        },
+        {
+          id: 0,
+          fromId: 4,
+          toId: 2,
+          labelId: 0,
+          state: "removed",
+        },
+        {
+          id: 0,
+          fromId: 4,
+          toId: 3,
+          labelId: 0,
+          state: "modified",
         },
       ],
       traits: [
@@ -129,31 +152,37 @@ export default Vue.extend({
           id: 4,
           type: 1,
           entityId: 2,
+          state: "auto",
         },
         {
           id: 0,
           type: 1,
           entityId: 0,
+          state: "auto",
         },
         {
           id: 1,
           type: 1,
           entityId: 0,
+          state: "auto",
         },
         {
           id: 2,
           type: 1,
           entityId: 5,
+          state: "removed",
         },
         {
           id: 3,
           type: 1,
           entityId: 2,
+          state: "auto",
         },
         {
           id: 5,
           type: 1,
           entityId: 6,
+          state: "added",
         },
       ],
       entityLabels: [
@@ -213,6 +242,7 @@ export default Vue.extend({
         endOffset,
         label: 0,
         user: 0,
+        state: "added",
       });
       this.id++;
     },
@@ -252,6 +282,7 @@ export default Vue.extend({
         fromId: 1,
         toId: 2,
         labelId: 1,
+        state: "added",
       });
     },
     addTrait() {
@@ -259,6 +290,7 @@ export default Vue.extend({
         id: 4,
         type: 1,
         entityId: 6,
+        state: "added",
       });
     },
     updateRelation(event: Event, relation: Relation) {

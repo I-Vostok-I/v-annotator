@@ -16,7 +16,7 @@
         markerHeight="6"
         orient="auto-start-reverse"
       >
-        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#74b8dc" fill="#74b8dc" />
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#000000" fill="#000000" />
       </marker>
     </defs>
     <g :transform="translate">
@@ -39,6 +39,7 @@
         :rtl="rtl"
         :margin="left"
         :selected="isSelectedRelation(relation.relation)"
+        :state="relation.state"
         @click:relation="$emit('click:relation', $event, relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
         @mouseover="$emit('setSelectedRelation', relation.relation)"
@@ -58,6 +59,7 @@
         :max-level-relation="maxRelationLevel"
         :relations-on-line="lineRelations.length > 0"
         :selected="isSelectedTrait(trait.trait)"
+        :state="trait.state"
         @click:trait="$emit('click:trait', $event, trait.trait)"
         @contextmenu:trait="$emit('contextmenu:trait', trait.trait)"
         @mouseover="$emit('setSelectedTrait', trait.trait)"
@@ -77,6 +79,7 @@
           :level="gEntity.level"
           :font-size="font.fontSize"
           :selected="isSelectedEntity(gEntity.entity)"
+          :state="gEntity.state"
           @click:entity="$emit('click:entity', $event, gEntity.entity)"
           @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
           @mouseover="$emit('setSelectedEntity', gEntity.entity)"

@@ -9,6 +9,7 @@ export interface LineTrait {
   label: string;
   labelWidth: number;
   trait: TraitListItem;
+  state: string;
 }
 
 export class TraitLine {
@@ -30,6 +31,7 @@ export class TraitLine {
       const label = this.traitLabels.getById(trait.type);
       const boundEntity = entityMap.get(trait.entity.id);
       let offset = 0;
+      const state = trait.state;
       if (boundEntity) {
         offset = boundEntity.center;
       }
@@ -42,6 +44,7 @@ export class TraitLine {
         label: label!.truncatedText,
         labelWidth: label!.truncatedWidth,
         trait: trait,
+        state: state,
       });
     }
     return lineTrait;

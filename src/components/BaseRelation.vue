@@ -9,7 +9,7 @@
     <path
       :d="d"
       v-bind="markerObj"
-      stroke="#74b8dc"
+      :stroke="stateColour"
       :stroke-width="width"
       fill="none"
     />
@@ -95,6 +95,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    state: {
+      type: String,
+      default: "added",
+    },
   },
 
   computed: {
@@ -131,21 +135,21 @@ export default Vue.extend({
         return `M ${this._x1} ${this.y - this.dy - this.r}
         H ${this._x2 - this.r}
         A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
-        v ${this.dy - 3}
+        v ${this.dy - 8}
         `;
       } else if (this.openRight) {
-        return `M ${this._x1} ${this.y}
-        v -${this.dy}
+        return `M ${this._x1} ${this.y - 8}
+        v -${this.dy - 8}
         A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
         H ${this._x2}
         `;
       } else {
-        return `M ${this._x1} ${this.y}
-        v -${this.dy}
+        return `M ${this._x1} ${this.y - 5}
+        v -${this.dy - 8}
         A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
         H ${this._x2 - this.r}
         A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
-        v ${this.dy - 3}
+        v ${this.dy - 8}
         `;
       }
     },
@@ -179,7 +183,7 @@ export default Vue.extend({
       return this.x2 - this.margin;
     },
     width(): number {
-      return this.selected ? 3 : 1;
+      return this.selected ? 3 : 2;
     },
     markerObj() {
       if (this.marker === "start") {
@@ -192,6 +196,18 @@ export default Vue.extend({
     },
     fill(): string {
       return this.dark ? "#1E1E1E" : "white";
+    },
+    stateColour(): string {
+      if (this.state === "removed") {
+        return "#D50000";
+      }
+      if (this.state === "added") {
+        return "#00A651";
+      }
+      if (this.state === "modified") {
+        return "#E67E22";
+      }
+      return this.dark ? "#93c9c9" : "#00A651";
     },
   },
 });
