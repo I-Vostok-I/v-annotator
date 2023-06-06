@@ -10,6 +10,7 @@
     <button @click="addRelation">Add relation</button>
     <button @click="addTrait">Add trait</button>
     <v-annotator
+      :dark="false"
       :allow-overlapping="allowOverlapping"
       :text="text"
       :entities="entities"
@@ -130,17 +131,17 @@ export default Vue.extend({
           fromId: 4,
           toId: 0,
           labelId: 0,
-          state: "auto",
+          state: "added",
         },
         {
-          id: 0,
+          id: 1,
           fromId: 4,
           toId: 2,
           labelId: 0,
           state: "removed",
         },
         {
-          id: 0,
+          id: 2,
           fromId: 4,
           toId: 3,
           labelId: 0,

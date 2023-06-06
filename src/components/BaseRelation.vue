@@ -24,7 +24,7 @@
       <text
         :x="center"
         :y="textY"
-        fill="currentColor"
+        :fill="stateColour"
         text-anchor="middle"
         v-text="label"
       />
@@ -187,9 +187,33 @@ export default Vue.extend({
     },
     markerObj() {
       if (this.marker === "start") {
-        return { "marker-start": "url(#arrow)" };
+        switch (this.state) {
+          case "removed":
+            return { "marker-start": "url(#arrow-removed)" };
+          case "added":
+            return { "marker-start": "url(#arrow-added)" };
+          case "modified":
+            return { "marker-start": "url(#arrow-modified)" };
+          default:
+            if (this.dark) {
+              return { "marker-start": "url(#arrow-light)" };
+            }
+            return { "marker-start": "url(#arrow-dark)" };
+        }
       } else if (this.marker === "end") {
-        return { "marker-end": "url(#arrow)" };
+        switch (this.state) {
+          case "removed":
+            return { "marker-end": "url(#arrow-removed)" };
+          case "added":
+            return { "marker-end": "url(#arrow-added)" };
+          case "modified":
+            return { "marker-end": "url(#arrow-modified)" };
+          default:
+            if (this.dark) {
+              return { "marker-end": "url(#arrow-light)" };
+            }
+            return { "marker-end": "url(#arrow-dark)" };
+        }
       } else {
         return {};
       }
@@ -207,7 +231,7 @@ export default Vue.extend({
       if (this.state === "modified") {
         return "#E67E22";
       }
-      return this.dark ? "#93c9c9" : "#00A651";
+      return this.dark ? "#93c9c9" : "#222222";
     },
   },
 });

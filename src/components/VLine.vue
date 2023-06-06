@@ -8,7 +8,7 @@
   >
     <defs>
       <marker
-        id="arrow"
+        id="arrow-light"
         viewBox="0 0 10 10"
         refX="5"
         refY="5"
@@ -16,13 +16,57 @@
         markerHeight="6"
         orient="auto-start-reverse"
       >
-        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#000000" fill="#000000" />
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#93c9c9" fill="#93c9c9" />
+      </marker>
+      <marker
+        id="arrow-dark"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#222222" fill="#222222" />
+      </marker>
+      <marker
+        id="arrow-added"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#00A651" fill="#00A651" />
+      </marker>
+      <marker
+        id="arrow-removed"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#D50000" fill="#D50000" />
+      </marker>
+      <marker
+        id="arrow-modified"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#E67E22" fill="#E67E22" />
       </marker>
     </defs>
     <g :transform="translate">
       <BaseRelation
         v-for="relation in lineRelations"
-        :key="relation.relation.id"
+        :key="'relation_' + relation.relation.id"
         :dark="dark"
         :font-size="font.fontSize"
         :x1="relation.x1"
@@ -47,7 +91,7 @@
       />
       <BaseTrait
         v-for="trait in lineTraits"
-        :key="trait.trait.id"
+        :key="'trait_' + trait.trait.id"
         :font-size="font.fontSize"
         :offset="trait.offset"
         :dark="dark"
@@ -66,10 +110,16 @@
         @mouseleave="$emit('setSelectedTrait', null)"
       />
       <g :transform="translateEntity">
-        <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
+        <BaseText
+          :id="id"
+          :text-line="textLine"
+          :text="text"
+          :dark="dark"
+          :x="baseX"
+        />
         <BaseEntity
           v-for="gEntity in geometricEntities"
-          :key="gEntity.entity.id"
+          :key="'entity_' + gEntity.entity.id"
           :ranges="gEntity.ranges"
           :color="color(gEntity.entity)"
           :label="labelText(gEntity.entity)"

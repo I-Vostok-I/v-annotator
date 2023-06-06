@@ -2,7 +2,7 @@
   <text
     v-if="snippet"
     v-text="snippet"
-    fill="currentColor"
+    :fill="textColor"
     style="white-space: pre"
   />
   <text v-else style="font-size: 6px" fill="currentColor">⮐</text>
@@ -23,6 +23,10 @@ export default Vue.extend({
       type: Object as PropType<TextLine>,
       required: true,
     },
+    dark: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   computed: {
@@ -31,6 +35,9 @@ export default Vue.extend({
         this.textLine.startOffset,
         this.textLine.endOffset
       );
+    },
+    textColor(): string {
+      return this.dark ? "#E1E1E1" : "black";
     },
   },
 
